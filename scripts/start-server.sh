@@ -13,7 +13,7 @@ sleep 5
 
 echo "---Checking if CSMM is installed---"
 if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
-	"---CSMM not found, installing---"
+	echo "---CSMM not found, installing---"
     cd ${DATA_DIR}
     if wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip ; then
     	echo "---CSMM successfully downloaded---"
