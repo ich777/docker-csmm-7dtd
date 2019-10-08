@@ -5,7 +5,7 @@ MAINTAINER ich777
 RUN apt-get update
 RUN apt-get -y install wget mariadb-server screen unzip curl redis-server
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get nodejs
+RUN apt-get install -y nodejs
 
 ENV DATA_DIR="/csmm-7dtd"
 ENV CSMM_DL_URL="https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip"
