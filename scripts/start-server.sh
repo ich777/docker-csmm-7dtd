@@ -99,7 +99,7 @@ sed -i "/REDISSTRING=/c\REDISSTRING=redis://127.0.0.1:6379" ${DATA_DIR}/CSMM/.en
 echo "---Checking if Databse is present---"
 if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
 	echo "---Database found, injecting---"
-	mysql -u "csmm" -p"csmm7dtd" < ${DATA_DIR}/Database/7dtd.sql
+	mysql -u "csmm" -p"csmm7dtd" 7dtd < ${DATA_DIR}/Database/7dtd.sql
     export NODE_ENV=production
 else
 	echo "--------------------------------------------------------------"
