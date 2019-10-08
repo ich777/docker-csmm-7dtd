@@ -19,8 +19,8 @@ RUN ulimit -n 2048
 
 RUN /etc/init.d/mysql start && \
 	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm';FLUSH PRIVILEGES;" && \
-	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7DtD;" && \
-	mysql -u root -e "GRANT ALL ON 7DtD.* TO 'csmm'@'%' IDENTIFIED BY 'csmm';" && \
+	mysql -u root -e "CREATE DATABASE IF NOT EXISTS csmm;" && \
+	mysql -u root -e "GRANT ALL ON csmm.* TO 'csmm'@'%' IDENTIFIED BY 'csmm';" && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$MARIA_DB_ROOT_PWD';FLUSH PRIVILEGES;"
 
 ADD /scripts/ /opt/scripts/
