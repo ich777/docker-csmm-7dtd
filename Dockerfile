@@ -8,6 +8,13 @@ RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get -y install nodejs
 
 ENV DATA_DIR="/csmm-7dtd"
+ENV FORCE_UPDATE=""
+ENV HOSTNAME=""
+ENV STEAM_API_KEY=""
+ENV BOTTOKEN=""
+ENV CLIENTSECRET=""
+ENV CLIENTID=""
+ENV DB_BKP_INTERV=60
 ENV CSMM_DL_URL="https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip"
 ENV UID=99
 ENV GID=100
