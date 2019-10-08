@@ -21,7 +21,7 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
     	echo "---Can't download CSMM, putting server into sleep mode---"
         sleep infinity
     fi
-    unzip ${DATA_DIR}/master.zip
+    unzip -p ${DATA_DIR}/master.zip
     rm ${DATA_DIR}/master.zip
     mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
     cd ${DATA_DIR}/CSMM
