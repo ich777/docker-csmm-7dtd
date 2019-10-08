@@ -1,8 +1,4 @@
 #!/bin/bash
-echo "---Checking for old logs---"
-find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
-find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
-
 echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
 sleep 5
@@ -21,12 +17,23 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
     	echo "---Can't download CSMM, putting server into sleep mode---"
         sleep infinity
     fi
-    unzip -p ${DATA_DIR}/master.zip
+    unzip -q ${DATA_DIR}/master.zip
     rm ${DATA_DIR}/master.zip
     mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
     cd ${DATA_DIR}/CSMM
     npm install --only=prod
-	find ${DATA_DIR} -name ".cache" -exec rm -R -f {} \;
+    if [ -d ${DATA_DIR}/.cache ]; then
+		rm -R ${DATA_DIR}/.cache
+    fi
+    if [ -d ${DATA_DIR}/.npm ]; then
+		rm -R ${DATA_DIR}/.npm
+    fi
+    if [ -d ${DATA_DIR}/.config ]; then
+		rm -R ${DATA_DIR}/.config
+    fi
+    if [ -f ${DATA_DIR}/.wget-hsts ]; then
+		rm ${DATA_DIR}/.wget-hsts
+    fi
     find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".wget-hsts" -exec rm -R -f {} \;
@@ -42,14 +49,23 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
     	echo "---Can't download CSMM, putting server into sleep mode---"
         sleep infinity
     fi
-    unzip ${DATA_DIR}/master.zip
+    unzip -q ${DATA_DIR}/master.zip
     rm ${DATA_DIR}/master.zip
     mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
     cd ${DATA_DIR}/CSMM
     npm install --only=prod
-	find ${DATA_DIR} -name ".cache" -exec rm -R -f {} \;
-    find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
-    find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
+    if [ -d ${DATA_DIR}/.cache ]; then
+		rm -R ${DATA_DIR}/.cache
+    fi
+    if [ -d ${DATA_DIR}/.npm ]; then
+		rm -R ${DATA_DIR}/.npm
+    fi
+    if [ -d ${DATA_DIR}/.config ]; then
+		rm -R ${DATA_DIR}/.config
+    fi
+    if [ -f ${DATA_DIR}/.wget-hsts ]; then
+		rm ${DATA_DIR}/.wget-hsts
+    fi
     cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
     echo "---Force Update finished, CSMM successfully installed---"
 else
@@ -60,6 +76,9 @@ echo "---Prepare Server---"
 if [ ! -d ${DATA_DIR}/Database ]; then
 	mkdir ${DATA_DIR}/Database
 fi
+echo "---Checking for old logs---"
+find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
+find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
 echo "---Configuring CSMM---"
 if [ "${HOSTNAME}" == "" ]; then
 	echo "---Hostname can't be empty, putting server into sleep mode---"
