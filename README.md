@@ -1,5 +1,5 @@
 # CSMM for 7DtD Server in Docker optimized for Unraid
-This Docker will install and download CSMM for 7DtD (CatalysmsServerManager).
+This Docker will install and download CSMM for 7DtD (Catalysms Server Monitor & Manager).
 
 It's a powerfull Server Manager with Server automation, Discord notifications, High ping kicker, Country ban, Player tracking, Ingame commands, Economy system, Discord integration, Support ticket system, Server analytics,... for 7DtD.
 
