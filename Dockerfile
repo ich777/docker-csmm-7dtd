@@ -18,13 +18,12 @@ RUN chown -R csmm-7dtd $DATA_DIR
 
 RUN ulimit -n 2048
 
-
+RUN sed -i '$a\[mysqld]\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncharacter-set-server=utf8mb4\ninnodb_default_row_format='DYNAMIC'' /etc/alternatives/my.cnf
 RUN /etc/init.d/mysql start && \
 	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';FLUSH PRIVILEGES;" && \
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7dtd;" && \
 	mysql -u root -e "GRANT ALL ON 7dtd.* TO 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';" && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'CSMM7DtD';FLUSH PRIVILEGES;"
-RUN sed -i '$a\[mysqld]\ndefault-engine=InnoDB\ninnodb-file-format=barracuda\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncollation-server=utf8mb4_unicode_ci\ncharacter-set-server=utf8mb4' /etc/alternatives/my.cnf
 
 ADD /scripts/ /opt/scripts/
 RUN chmod -R 770 /opt/scripts/
