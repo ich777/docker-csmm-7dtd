@@ -19,7 +19,7 @@ RUN chown -R csmm-7dtd $DATA_DIR
 RUN ulimit -n 2048
 
 RUN /etc/init.d/mysql start && \
-	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm-7dtd';FLUSH PRIVILEGES;" && \
+	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';FLUSH PRIVILEGES;" && \
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7dtd;" && \
 	mysql -u root -e "GRANT ALL ON 7dtd.* TO 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';" && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'CSMM7DtD';FLUSH PRIVILEGES;"
