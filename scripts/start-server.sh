@@ -23,6 +23,7 @@ if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
 	else
 		echo "---Something went wrong, can't download Database, putting server in sleep mode---"
 		sleep infinity
+	fi
 else
 	echo "---Database found!---"
 fi
