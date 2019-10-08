@@ -8,14 +8,15 @@ find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
 
 echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
-sleep 10
+sleep 5
 
 echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
-
+sleep 5
 
 echo "---Sleep zZz---"
 sleep infinity
+
 
 cd ${DATA_DIR}
 wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip
@@ -50,6 +51,22 @@ if grep -rq 'Username = csmm' ${DATA_DIR}//extdb-conf.ini; then
 fi
 
 echo "---Prepare Server---"
+if [ ! -d ${DATA_DIR}/Database ]; then
+	mkdir ${DATA_DIR}/Database
+fi
+echo "---Checking if Database is present---"
+if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
+	if wget -q https://raw.githubusercontent.com/ich777/docker-csmm-7dtd/master/database/7dtd.sql ; then
+		echo "---Sucessfully downloaded Database---"
+	else
+		echo "---Something went wrong, can't download Database, putting server in sleep mode---"
+		sleep infinity
+else
+	echo "---Database found!---"
+fi
+
+echo "---Injecting Database---"
+mysql -u "csmm" -p"csmm7dtd" -e "SOURCE ${DATA_DIR}/Database/7dtd.sql"
 chmod -R 770 ${DATA_DIR}
 
 echo "---Start Server---"
