@@ -12,7 +12,7 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
 	echo "---CSMM not found, installing---"
     cd ${DATA_DIR}
     if wget -q --show-progress ${CSMM_DL_URL} ; then
-    	echo "---CSMM successfully downloaded---"
+    	echo "---CSMM successfully downloaded, please wait---"
     else
     	echo "---Can't download CSMM, putting server into sleep mode---"
         sleep infinity
@@ -44,7 +44,7 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
     cd ${DATA_DIR}
     rm -R ${DATA_DIR}/CSMM
     if wget -q --show-progress ${CSMM_DL_URL} ; then
-    	echo "---CSMM successfully downloaded---"
+    	echo "---CSMM successfully downloaded, please wait---"
     else
     	echo "---Can't download CSMM, putting server into sleep mode---"
         sleep infinity
@@ -98,7 +98,7 @@ sed -i "/REDISSTRING=/c\REDISSTRING=redis://127.0.0.1:6379" ${DATA_DIR}/CSMM/.en
 
 echo "---Checking if Databse is present---"
 if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
-	echo "---Database found, injecting---"
+	echo "---Database found, injecting, please wait---"
 	mysql -u "csmm" -p"csmm7dtd" 7dtd < ${DATA_DIR}/Database/7dtd.sql
     export NODE_ENV=production
 else
