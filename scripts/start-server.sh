@@ -1,6 +1,4 @@
 #!/bin/bash
-
-
 echo "---Checking for old logs---"
 find ${DATA_DIR} -name "CSMMLog.0" -exec rm -f {} \;
 find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
@@ -14,6 +12,26 @@ echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
 sleep 5
 
+echo "---Prepare Server---"
+if [ ! -d ${DATA_DIR}/Database ]; then
+	mkdir ${DATA_DIR}/Database
+fi
+echo "---Checking if Database is present---"
+if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
+	if wget -q https://raw.githubusercontent.com/ich777/docker-csmm-7dtd/master/database/7dtd.sql ; then
+		echo "---Sucessfully downloaded Database---"
+	else
+		echo "---Something went wrong, can't download Database, putting server in sleep mode---"
+		sleep infinity
+else
+	echo "---Database found!---"
+fi
+
+echo "---Injecting Database---"
+mysql -u "csmm" -p"csmm7dtd" -e "SOURCE ${DATA_DIR}/Database/7dtd.sql"
+chmod -R 770 ${DATA_DIR}
+
+
 echo "---Sleep zZz---"
 sleep infinity
 
@@ -23,7 +41,7 @@ wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-
 unzip ${DATA_DIR}/master.zip
 cd ${DATA_DIR}/7-days-to-die-server-manager-master
 npm install --only=prod
-cp ${DATA_DIR}/.env.example ${DATA_DIR}/.env
+cp ${DATA_DIR}/7-days-to-die-server-manager-master/.env.example ${DATA_DIR}/7-days-to-die-server-manager-master/.env
 
 
 
