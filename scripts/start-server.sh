@@ -29,6 +29,7 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
 	find ${DATA_DIR} -name ".cache" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
+    find ${DATA_DIR} -name ".wget-hsts" -exec rm -R -f {} \;
     cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
     echo "---CSMM successfully installed---"
 elif [ "${FORCE_UPDATE}" == "true" ]; then
