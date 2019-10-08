@@ -18,6 +18,7 @@ if [ ! -d ${DATA_DIR}/Database ]; then
 fi
 echo "---Checking if Database is present---"
 if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
+	cd ${DATA_DIR}/Database
 	if wget -q https://raw.githubusercontent.com/ich777/docker-csmm-7dtd/master/database/7dtd.sql ; then
 		echo "---Sucessfully downloaded Database---"
 	else
