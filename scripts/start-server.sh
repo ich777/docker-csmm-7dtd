@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "---Sleep zZz---"
+sleep infinity
+
 echo "---Checking for old logs---"
 find ${SERVER_DIR} -name "CSMMLog.0" -exec rm -f {} \;
 find ${SERVER_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
