@@ -1,6 +1,5 @@
 #!/bin/bash
 echo "---Checking for old logs---"
-find ${DATA_DIR} -name "CSMMLog.0" -exec rm -f {} \;
 find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
 find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
 
@@ -12,85 +11,90 @@ echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
 sleep 5
 
-echo "---Prepare Server---"
-if [ ! -d ${DATA_DIR}/Database ]; then
-	mkdir ${DATA_DIR}/Database
-fi
-echo "---Checking if Database is present---"
-if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
-	cd ${DATA_DIR}/Database
-	if wget -q https://raw.githubusercontent.com/ich777/docker-csmm-7dtd/master/database/7dtd.sql ; then
-		echo "---Sucessfully downloaded Database---"
-	else
-		echo "---Something went wrong, can't download Database, putting server in sleep mode---"
-		sleep infinity
-	fi
-else
-	echo "---Database found!---"
-fi
-
-echo "---Injecting Database---"
-mysql -u "csmm" -p"csmm7dtd" -e "SOURCE ${DATA_DIR}/Database/7dtd.sql"
-chmod -R 770 ${DATA_DIR}
-
-
-echo "---Sleep zZz---"
-sleep infinity
-
-
-cd ${DATA_DIR}
-wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip
-unzip ${DATA_DIR}/master.zip
-cd ${DATA_DIR}/7-days-to-die-server-manager-master
-npm install --only=prod
-cp ${DATA_DIR}/7-days-to-die-server-manager-master/.env.example ${DATA_DIR}/7-days-to-die-server-manager-master/.env
-
-
-
-DBSTRING=mysql2://csmm:csmm-7dtd@localhost:3306/7dtd
-REDISSTRING=redis://127.0.0.1:6379
-
-nodejs app.js
-
-
-
-echo "---Checking if CSMM is configured correctly for database connection---"
-if grep -rq 'Username = changeme' ${DATA_DIR}//extdb-conf.ini; then
-	sed -i '/Username = changeme/c\Username = csmm' ${DATA_DIR}//extdb-conf.ini
-	sed -i '/Username = csmm/!b;n;cPassword = csmm' ${DATA_DIR}//extdb-conf.ini
-    echo "---Corrected ExileMod database connection---"
-fi
-
-if grep -rq 'Username = csmm' ${DATA_DIR}//extdb-conf.ini; then
-	if grep -rq 'Password = csmm' ${DATA_DIR}//extdb-conf.ini; then
-    	:
+echo "---Checking if CSMM is installed---"
+if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
+	"---CSMM not found, installing---"
+    cd ${DATA_DIR}
+    if wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip ; then
+    	echo "---CSMM successfully downloaded---"
     else
-    	sed -i '/Username = csmm/!b;n;cPassword = csmm' ${DATA_DIR}//extdb-conf.ini
+    	echo "---Can't download CSMM, putting server into sleep mode---"
+        sleep infinity
     fi
-	echo "---CSMM database connection correct---"
+    unzip ${DATA_DIR}/master.zip
+    rm ${DATA_DIR}/master.zip
+    mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
+    cd ${DATA_DIR}/CSMM
+    npm install --only=prod
+	find ${DATA_DIR} -name ".cache" -exec rm -R -f {} \;
+    find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
+    find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
+    cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
+    echo "---CSMM successfully installed---"
+elif [ "${FORCE_UPDATE}" == "true" ]; then
+	echo "---Force Update activated, installing CSMM---"
+    cd ${DATA_DIR}
+    rm -R ${DATA_DIR}/CSMM
+    if wget -q --show-progress https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip ; then
+    	echo "---CSMM successfully downloaded---"
+    else
+    	echo "---Can't download CSMM, putting server into sleep mode---"
+        sleep infinity
+    fi
+    unzip ${DATA_DIR}/master.zip
+    rm ${DATA_DIR}/master.zip
+    mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
+    cd ${DATA_DIR}/CSMM
+    npm install --only=prod
+	find ${DATA_DIR} -name ".cache" -exec rm -R -f {} \;
+    find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
+    find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
+    cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
+    echo "---Force Update finished, CSMM successfully installed---"
+else
+	echo "---CSMM found---"
 fi
 
 echo "---Prepare Server---"
 if [ ! -d ${DATA_DIR}/Database ]; then
 	mkdir ${DATA_DIR}/Database
 fi
-echo "---Checking if Database is present---"
-if [ ! -f ${DATA_DIR}/Database/7dtd.sql ]; then
-	if wget -q https://raw.githubusercontent.com/ich777/docker-csmm-7dtd/master/database/7dtd.sql ; then
-		echo "---Sucessfully downloaded Database---"
-	else
-		echo "---Something went wrong, can't download Database, putting server in sleep mode---"
-		sleep infinity
-else
-	echo "---Database found!---"
+echo "---Configuring CSMM---"
+if [ "${HOSTNAME}" == "" ]; then
+	echo "---Hostname can't be empty, putting server into sleep mode---"
+    sleep infinity
 fi
+if [ "${STEAM_API_KEY}" == "" ]; then
+	echo "---Steam API Key can't be empty, putting server into sleep mode---"
+    sleep infinity
+fi
+sed -i "/CSMM_HOSTNAME=/c\CSMM_HOSTNAME=${HOSTNAME}" ${DATA_DIR}/CSMM/.env
+sed -i "/API_KEY_STEAM=/c\API_KEY_STEAM=${STEAM_API_KEY}" ${DATA_DIR}/CSMM/.env
+sed -i "/DISCORDBOTTOKEN=/c\DISCORDBOTTOKEN=${BOTTOKEN}" ${DATA_DIR}/CSMM/.env
+sed -i "/DISCORDCLIENTSECRET=/c\DISCORDCLIENTSECRET=${CLIENTSECRET}" ${DATA_DIR}/CSMM/.env
+sed -i "/DISCORDCLIENTID=/c\DISCORDCLIENTID=${CLIENTID}" ${DATA_DIR}/CSMM/.env
+sed -i "/DBSTRING=/c\DBSTRING=mysql2://csmm:csmm7dtd@127.0.0.1:3306/7dtd" ${DATA_DIR}/CSMM/.env
+sed -i "/REDISSTRING=/c\REDISSTRING=redis://127.0.0.1:6379" ${DATA_DIR}/CSMM/.env
 
-echo "---Injecting Database---"
-mysql -u "csmm" -p"csmm7dtd" -e "SOURCE ${DATA_DIR}/Database/7dtd.sql"
+echo "---Checking if Databse is present---"
+if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
+	echo "---Database found, injecting---"
+	mysql -u "csmm" -p"csmm7dtd" < ${DATA_DIR}/Database/7dtd.sql
+    export NODE_ENV=production
+else
+	echo "--------------------------------------------------------------"
+	echo "---Please wait initializing CSMM this will take ~60 seconds---"
+    echo "-------the CSMM will restart automatically after that it------"
+    echo "--------------------------------------------------------------"
+    sleep 5
+    cd ${DATA_DIR}/CSMM
+    timeout 60 nodejs ${DATA_DIR}/CSMM/app.js
+    export NODE_ENV=production
+fi
+sleep 3
+screen -S BackupDatabase -L -d -m /opt/scripts/backup-database.sh
 chmod -R 770 ${DATA_DIR}
 
 echo "---Start Server---"
-cd ${DATA_DIR}
-
-
-tail -f ${DATA_DIR}/MariaDBLog.0 ${DATA_DIR}/CSSMLog.0
+cd ${DATA_DIR}/CSMM
+nodejs ${DATA_DIR}/CSMM/app.js
