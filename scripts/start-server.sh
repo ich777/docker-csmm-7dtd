@@ -5,7 +5,6 @@ sleep 5
 
 echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
-echo "config set stop-writes-on-bgsave-error no" | redis-cli
 sleep 5
 
 echo "---Checking if CSMM is installed---"
