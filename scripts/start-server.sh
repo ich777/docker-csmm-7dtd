@@ -77,6 +77,7 @@ if [ ! -d ${DATA_DIR}/Database ]; then
 	mkdir ${DATA_DIR}/Database
 fi
 echo "---Configuring Redis---"
+sleep 5
 echo "CONFIG SET dir ${DATA_DIR}/Database" | redis-cli
 echo "CONFIG SET dbfilename redis.rdb" | redis-cli
 echo "BGSAVE" | redis-cli
