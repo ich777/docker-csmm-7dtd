@@ -77,6 +77,10 @@ echo "---Prepare Server---"
 if [ ! -d ${DATA_DIR}/Database ]; then
 	mkdir ${DATA_DIR}/Database
 fi
+echo "---Configuring Redis---"
+echo "CONFIG SET dir ${DATA_DIR}/Database" | redis-cli
+echo "CONFIG SET dbfilename temp.rdb" | redis-cli
+echo "BGSAVE" | redis-cli
 echo "---Checking for old logs---"
 find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
 find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
