@@ -16,7 +16,6 @@ ENV CLIENTSECRET=""
 ENV CLIENTID=""
 ENV DB_BKP_INTERV=90
 ENV CSMM_DL_URL="https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip"
-ENV UMASK=000
 ENV UID=99
 ENV GID=100
 
