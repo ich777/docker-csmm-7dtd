@@ -1,7 +1,4 @@
 #!/bin/bash
-echo "---Setting umask to ${UMASK}---"
-umask ${UMASK}
-
 echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
 sleep 5
@@ -121,7 +118,7 @@ else
 fi
 sleep 3
 screen -S BackupDatabase -L -d -m /opt/scripts/backup-database.sh
-chmod -R 777 ${DATA_DIR}
+chmod -R 770 ${DATA_DIR}
 
 echo "---Start Server---"
 cd ${DATA_DIR}/CSMM
