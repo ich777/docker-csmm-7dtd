@@ -1,11 +1,12 @@
-FROM ubuntu
+FROM ich777/debian-baseimage
 
-MAINTAINER ich777
+LABEL maintainer="admin@minenet.at"
 
-RUN apt-get update
-RUN apt-get -y install wget mariadb-server screen unzip curl redis-server
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt-get -y install nodejs
+RUN apt-get update && \
+	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server && \
+	curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+	apt-get -y install nodejs && \
+	rm -rf /var/lib/apt/lists/*
 
 ENV DATA_DIR="/csmm-7dtd"
 ENV FORCE_UPDATE=""
@@ -20,29 +21,27 @@ ENV UMASK=000
 ENV UID=99
 ENV GID=100
 
-RUN mkdir $DATA_DIR
-RUN useradd -d $DATA_DIR -s /bin/bash --uid $UID --gid $GID csmm-7dtd
-RUN chown -R csmm-7dtd $DATA_DIR
-
-RUN ulimit -n 2048
-
-RUN sed -i '$a\[mysqld]\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncharacter-set-server=utf8mb4\ninnodb_default_row_format='DYNAMIC'' /etc/alternatives/my.cnf
-RUN /etc/init.d/mysql start && \
+RUN mkdir $DATA_DIR && \
+	useradd -d $DATA_DIR -s /bin/bash --uid $UID --gid $GID csmm-7dtd && \
+	chown -R csmm-7dtd $DATA_DIR && \
+	ulimit -n 2048 && \
+	sed -i '$a\[mysqld]\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncharacter-set-server=utf8mb4\ninnodb_default_row_format='DYNAMIC'' /etc/alternatives/my.cnf && \
+	/etc/init.d/mysql start && \
 	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';FLUSH PRIVILEGES;" && \
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7dtd;" && \
 	mysql -u root -e "GRANT ALL ON 7dtd.* TO 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';" && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'CSMM7DtD';FLUSH PRIVILEGES;"
 
 ADD /scripts/ /opt/scripts/
-RUN chmod -R 770 /opt/scripts/
-RUN chown -R csmm-7dtd /opt/scripts
-RUN chown -R csmm-7dtd:users /var/lib/mysql
-RUN chmod -R 770 /var/lib/mysql
-RUN chown -R csmm-7dtd:users /var/run/mysqld
-RUN chmod -R 770 /var/run/mysqld
-RUN chown -R csmm-7dtd /var/lib/redis
-RUN chown -R csmm-7dtd /usr/bin/redis-server
-RUN chown -R csmm-7dtd /usr/bin/redis-cli
+RUN chmod -R 770 /opt/scripts/ && \
+	chown -R csmm-7dtd /opt/scripts && \
+	chown -R csmm-7dtd:users /var/lib/mysql && \
+	chmod -R 770 /var/lib/mysql && \
+	chown -R csmm-7dtd:users /var/run/mysqld && \
+	chmod -R 770 /var/run/mysqld && \
+	chown -R csmm-7dtd /var/lib/redis && \
+	chown -R csmm-7dtd /usr/bin/redis-server && \
+	chown -R csmm-7dtd /usr/bin/redis-cli
 
 USER csmm-7dtd
 
