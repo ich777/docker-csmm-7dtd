@@ -14,7 +14,7 @@ echo "---Checking if CSMM is installed---"
 if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
 	echo "---CSMM not found, installing---"
     cd ${DATA_DIR}
-    if wget -q --show-progress ${CSMM_DL_URL} ; then
+    if wget -q -nc --show-progress --progress=bar:force:noscroll ${CSMM_DL_URL} ; then
     	echo "---CSMM successfully downloaded, please wait---"
     else
     	echo "---Can't download CSMM, putting server into sleep mode---"
@@ -46,7 +46,7 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
 	echo "---Force Update activated, installing CSMM---"
     cd ${DATA_DIR}
     rm -R ${DATA_DIR}/CSMM
-    if wget -q --show-progress ${CSMM_DL_URL} ; then
+    if wget -q -nc --show-progress --progress=bar:force:noscroll ${CSMM_DL_URL} ; then
     	echo "---CSMM successfully downloaded, please wait---"
     else
     	echo "---Can't download CSMM, putting server into sleep mode---"
