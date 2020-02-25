@@ -20,10 +20,12 @@ ENV CSMM_DL_URL="https://github.com/CatalysmsServerManager/7-days-to-die-server-
 ENV UMASK=000
 ENV UID=99
 ENV GID=100
+ENV DATA_PERM=770
+ENV USER="csmm-7dtd"
 
 RUN mkdir $DATA_DIR && \
-	useradd -d $DATA_DIR -s /bin/bash --uid $UID --gid $GID csmm-7dtd && \
-	chown -R csmm-7dtd $DATA_DIR && \
+	useradd -d $DATA_DIR -s /bin/bash $USER && \
+	chown -R $USER $DATA_DIR && \
 	ulimit -n 2048 && \
 	sed -i '$a\[mysqld]\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncharacter-set-server=utf8mb4\ninnodb_default_row_format='DYNAMIC'' /etc/alternatives/my.cnf && \
 	/etc/init.d/mysql start && \
@@ -33,17 +35,7 @@ RUN mkdir $DATA_DIR && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'CSMM7DtD';FLUSH PRIVILEGES;"
 
 ADD /scripts/ /opt/scripts/
-RUN chmod -R 770 /opt/scripts/ && \
-	chown -R csmm-7dtd /opt/scripts && \
-	chown -R csmm-7dtd:users /var/lib/mysql && \
-	chmod -R 770 /var/lib/mysql && \
-	chown -R csmm-7dtd:users /var/run/mysqld && \
-	chmod -R 770 /var/run/mysqld && \
-	chown -R csmm-7dtd /var/lib/redis && \
-	chown -R csmm-7dtd /usr/bin/redis-server && \
-	chown -R csmm-7dtd /usr/bin/redis-cli
-
-USER csmm-7dtd
+RUN chmod -R 770 /opt/scripts/
 
 #Server Start
-ENTRYPOINT ["/opt/scripts/start-server.sh"]
+ENTRYPOINT ["/opt/scripts/start.sh"]
