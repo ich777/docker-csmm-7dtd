@@ -27,7 +27,9 @@ chmod -R 770 /var/run/mysqld
 
 term_handler() {
 	kill -SIGTERM "$(pidof node)"
+	kill -SIGTERM  "$(pidof mysqldump)" 2>/dev/null
 	tail --pid="$(pidof node)" -f 2>/dev/null
+	tail --pid="$(pidof mysqldump)" -f 2>/dev/null
 	exit 143;
 }
 
