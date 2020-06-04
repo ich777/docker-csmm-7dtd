@@ -110,12 +110,12 @@ if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
     export NODE_ENV=production
 else
 	echo "--------------------------------------------------------------"
-	echo "---Please wait initializing CSMM this will take ~60 seconds---"
+	echo "---Please wait initializing CSMM this will take ~120 seconds---"
     echo "-------the CSMM will restart automatically after that it------"
     echo "--------------------------------------------------------------"
     sleep 5
     cd ${DATA_DIR}/CSMM
-    timeout 60 nodejs ${DATA_DIR}/CSMM/app.js
+    timeout 120 nodejs ${DATA_DIR}/CSMM/app.js
     export NODE_ENV=production
 fi
 sleep 3
