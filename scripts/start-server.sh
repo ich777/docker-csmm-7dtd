@@ -22,7 +22,7 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
     mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
     cd ${DATA_DIR}/CSMM
     npm install --only=prod
-	npm itemIcons:update
+    npm run itemIcons:update
     if [ -d ${DATA_DIR}/.cache ]; then
 		rm -R ${DATA_DIR}/.cache
     fi
@@ -55,7 +55,7 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
     mv ${DATA_DIR}/7-days-to-die-server-manager-master ${DATA_DIR}/CSMM
     cd ${DATA_DIR}/CSMM
     npm install --only=prod
-	npm itemIcons:update
+    npm run itemIcons:update
     if [ -d ${DATA_DIR}/.cache ]; then
 		rm -R ${DATA_DIR}/.cache
     fi
