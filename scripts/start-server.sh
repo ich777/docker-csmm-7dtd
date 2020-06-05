@@ -124,4 +124,4 @@ chmod -R ${DATA_PERM} ${DATA_DIR}
 
 echo "---Start Server---"
 cd ${DATA_DIR}/CSMM
-nodejs ${DATA_DIR}/CSMM/app.js
+exec npm run start
