@@ -115,8 +115,8 @@ else
     echo "--------------------------------------------------------------"
     sleep 5
     cd ${DATA_DIR}/CSMM
-    timeout 120 nodejs ${DATA_DIR}/CSMM/app.js
     export NODE_ENV=production
+	npm run db:migrate
 fi
 sleep 3
 screen -S BackupDatabase -L -d -m /opt/scripts/backup-database.sh
