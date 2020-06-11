@@ -14,6 +14,7 @@ It's a powerfull Server Manager with Server automation, Discord notifications, H
 | CLIENTSECRET | Your Discord Client Secret (you can get it from here: https://discordapp.com/developers/applications) | *secret* |
 | CLIENTID | Your Discord Client ID (you can get it from here: https://discordapp.com/developers/applications) | *secret* |
 | DB_BKP_INTERV | Specify the database backup interval in seconds (saved to the ../Database/7dtd.sql) | 90 |
+| CSMM_LOGLEVEL | Log level valid are: 'blank', 'error', 'warn', 'info', 'debug', 'verbose', 'silly' | info |
 | FORCE_UPDATE | Set to 'true' to force an update | *blank* |
 | CSMM_DL_URL | Set to 'true' if you want to update the server manually (otherwise leave blank) | https://github.com/CatalysmsServerManager/7-day... |
 | UID | User Identifier | 99 |
@@ -26,6 +27,7 @@ docker run --name CSMM -d \
     --env 'HOSTNAME=https://www.server.org' \
     --env 'STEAM_API_KEY=placeyourkeyhere' \
     --env 'DB_BKP_INTERV=90' \
+    --env 'CSMM_LOGLEVEL=info' \
     --env 'CSMM_DL_URL=https://github.com/CatalysmsServerManager/7-days-to-die-server-manager/archive/master.zip' \
     --env 'UID=99' \
     --env 'GID=100' \
