@@ -9,8 +9,8 @@ umask ${UMASK}
 echo "---Checking for optional scripts---"
 if [ -f /opt/scripts/user.sh ]; then
 	echo "---Found optional script, executing---"
-    chmod +x /opt/scripts/user.sh
-    /opt/scripts/user.sh
+	chmod +x /opt/scripts/user.sh
+	/opt/scripts/user.sh
 else
 	echo "---No optional script found, continuing---"
 fi
@@ -26,10 +26,8 @@ chmod -R 770 /var/lib/mysql
 chmod -R 770 /var/run/mysqld
 
 term_handler() {
-	kill -SIGTERM "$(pidof node)"
-	kill -SIGTERM  "$(pidof mysqldump)" 2>/dev/null
+	ps -ef | grep node | grep -v "grep" | awk '{print $2}' | xargs kill -SIGTERM;
 	tail --pid="$(pidof node)" -f 2>/dev/null
-	tail --pid="$(pidof mysqldump)" -f 2>/dev/null
 	exit 143;
 }
 
