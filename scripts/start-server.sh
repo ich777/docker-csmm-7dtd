@@ -1,7 +1,32 @@
 #!/bin/bash
+if [ ! -d ${DATA_DIR}/.database ]; then
+	mkdir ${DATA_DIR}/.database
+	if [ ! -d ${DATA_DIR}/.database/mysql ]; then
+		cp -R /var/lib/mysql ${DATA_DIR}/.database
+	fi
+fi
+
+if [ -d ${DATA_DIR}/Database ]; then
+	echo "---Found old database structure, migrating to new structure---"
+	if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
+    echo "---Injecting database backup---"
+		screen -d -m mysqld_safe && sleep 2
+		mysql -u "csmm" -p"csmm7dtd" 7dtd < ${DATA_DIR}/Database/7dtd.sql
+    sleep 2
+		kill "$(pidof mysqld)"
+		screen -wipe 2&>/dev/null
+		touch ${DATA_DIR}/.database/init
+    sleep 5
+	fi
+	if [ -f ${DATA_DIR}/Database/redis.rdb ]; then
+		mv ${DATA_DIR}/Database/redis.rdb ${DATA_DIR}/.database/redis.rdb
+	fi
+	rm -R ${DATA_DIR}/Database
+fi
+
 echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
-sleep 5
+sleep 10
 
 echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
@@ -75,25 +100,23 @@ else
 fi
 
 echo "---Prepare Server---"
-if [ ! -d ${DATA_DIR}/Database ]; then
-	mkdir ${DATA_DIR}/Database
-fi
 echo "---Configuring Redis---"
 sleep 5
-echo "CONFIG SET dir ${DATA_DIR}/Database" | redis-cli
+echo "CONFIG SET dir ${DATA_DIR}/.database" | redis-cli
 echo "CONFIG SET dbfilename redis.rdb" | redis-cli
 echo "BGSAVE" | redis-cli
 echo "---Checking for old logs---"
 find ${DATA_DIR} -name "MariaDBLog.0" -exec rm -f {} \;
 find ${DATA_DIR} -name "RedisLog.0" -exec rm -f {} \;
+screen -wipe 2&>/dev/null
 echo "---Configuring CSMM---"
 if [ "${HOSTNAME}" == "" ]; then
 	echo "---Hostname can't be empty, putting server into sleep mode---"
-    sleep infinity
+	sleep infinity
 fi
 if [ "${STEAM_API_KEY}" == "" ]; then
 	echo "---Steam API Key can't be empty, putting server into sleep mode---"
-    sleep infinity
+	sleep infinity
 fi
 sed -i "/CSMM_HOSTNAME=/c\CSMM_HOSTNAME=${HOSTNAME}" ${DATA_DIR}/CSMM/.env
 sed -i "/API_KEY_STEAM=/c\API_KEY_STEAM=${STEAM_API_KEY}" ${DATA_DIR}/CSMM/.env
@@ -104,22 +127,21 @@ sed -i "/DBSTRING=/c\DBSTRING=mysql2://csmm:csmm7dtd@127.0.0.1:3306/7dtd" ${DATA
 sed -i "/REDISSTRING=/c\REDISSTRING=redis://127.0.0.1:6379" ${DATA_DIR}/CSMM/.env
 
 echo "---Checking if Databse is present---"
-if [ -f ${DATA_DIR}/Database/7dtd.sql ]; then
-	echo "---Database found, injecting, please wait---"
-	mysql -u "csmm" -p"csmm7dtd" 7dtd < ${DATA_DIR}/Database/7dtd.sql
-    export NODE_ENV=production
+if [ -f ${DATA_DIR}/.database/init ]; then
+	echo "---Database initalized!---"
+	export NODE_ENV=production
 else
 	echo "--------------------------------------------------------------"
 	echo "---Please wait initializing CSMM this will take ~120 seconds---"
-    echo "-------the CSMM will restart automatically after that it------"
-    echo "--------------------------------------------------------------"
-    sleep 5
-    cd ${DATA_DIR}/CSMM
-    export NODE_ENV=production
+	echo "-------the CSMM will restart automatically after that it------"
+	echo "--------------------------------------------------------------"
+	cd ${DATA_DIR}/CSMM
+	export NODE_ENV=production
+	sleep 5
 	npm run db:migrate
+  touch ${DATA_DIR}/.database/init
 fi
 sleep 3
-screen -S BackupDatabase -L -d -m /opt/scripts/backup-database.sh
 chmod -R ${DATA_PERM} ${DATA_DIR}
 
 echo "---Start Server---"
