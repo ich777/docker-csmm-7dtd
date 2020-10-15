@@ -130,11 +130,9 @@ echo "---Checking if Databse is present---"
 if [ -f ${DATA_DIR}/.database/init ]; then
 	echo "---Database initalized!---"
 	export NODE_ENV=production
-  if [ ! -f ${DATA_DIR}/.database/migrate ]; then
-    cd ${DATA_DIR}/CSMM
-	  npm run db:migrate
-  fi
-  touch ${DATA_DIR}/.database/migrate
+  sleep 5
+  cd ${DATA_DIR}/CSMM
+	npm run db:migrate
 else
 	echo "--------------------------------------------------------------"
 	echo "---Please wait initializing CSMM this will take ~120 seconds---"
@@ -145,7 +143,6 @@ else
 	sleep 5
 	npm run db:migrate
   touch ${DATA_DIR}/.database/init
-  touch ${DATA_DIR}/.database/migrate
 fi
 
 sleep 3
