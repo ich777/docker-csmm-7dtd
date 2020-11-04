@@ -24,6 +24,7 @@ chown -R ${UID}:${GID} /usr/bin/redis-server
 chown -R ${UID}:${GID} /usr/bin/redis-cli
 chmod -R 770 /var/lib/mysql
 chmod -R 770 /var/run/mysqld
+chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
 	ps -ef | grep node | grep -v "grep" | awk '{print $2}' | xargs kill -SIGTERM;
