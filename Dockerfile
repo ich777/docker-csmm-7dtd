@@ -4,7 +4,7 @@ LABEL maintainer="admin@minenet.at"
 
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server && \
-	curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
+	curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
 	apt-get -y install --no-install-recommends nodejs && \
 	rm -rf /var/lib/apt/lists/*
 
