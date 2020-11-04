@@ -97,6 +97,8 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
     echo "---Force Update finished, CSMM successfully installed---"
 else
 	echo "---CSMM found---"
+  cd ${DATA_DIR}/CSMM
+  NODE_ENV=production npm ci
 fi
 
 echo "---Prepare Server---"
@@ -125,10 +127,6 @@ sed -i "/DISCORDCLIENTSECRET=/c\DISCORDCLIENTSECRET=${CLIENTSECRET}" ${DATA_DIR}
 sed -i "/DISCORDCLIENTID=/c\DISCORDCLIENTID=${CLIENTID}" ${DATA_DIR}/CSMM/.env
 sed -i "/DBSTRING=/c\DBSTRING=mysql2://csmm:csmm7dtd@127.0.0.1:3306/7dtd" ${DATA_DIR}/CSMM/.env
 sed -i "/REDISSTRING=/c\REDISSTRING=redis://127.0.0.1:6379" ${DATA_DIR}/CSMM/.env
-
-#echo "---Updating module 'sails'---"
-#cd ${DATA_DIR}/CSMM
-#npm install sails
 
 echo "---Checking if Databse is present---"
 if [ -f ${DATA_DIR}/.database/init ]; then
