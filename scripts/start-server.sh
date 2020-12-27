@@ -29,7 +29,7 @@ screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
 sleep 10
 
 echo "---Starting Redis Server---"
-screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
+screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server --appendonly yes
 sleep 5
 
 echo "---Checking if CSMM is installed---"
