@@ -36,8 +36,7 @@ RUN mkdir $DATA_DIR && \
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7dtd;" && \
 	mysql -u root -e "GRANT ALL ON 7dtd.* TO 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';" && \
 	mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'CSMM7DtD';FLUSH PRIVILEGES;" && \
-	sed -i '$adatadir=/csmm-7dtd/.database/mysql\n\n[client]\nport=3306' /etc/mysql/my.cnf && \
-	sed -i '/dir \/var\/lib\/redis/c\dir \/csmm-7dtd\/.database' /etc/redis/redis.conf
+	sed -i '$adatadir=/csmm-7dtd/.database/mysql\n\n[client]\nport=3306' /etc/mysql/my.cnf
 
 ADD /scripts/ /opt/scripts/
 RUN chmod -R 770 /opt/scripts/
