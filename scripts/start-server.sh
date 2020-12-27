@@ -28,13 +28,19 @@ echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld_safe
 sleep 10
 
-echo "---Starting Redis Server---"
+echo "---Initializing Redis Server---"
 if [ ! -f /var/lib/redis/appendonly.aof ]; then
   touch /var/lib/redis/appendonly.aof
   chmod 777 /var/lib/redis/appendonly.aof
 else
   chmod 777 /var/lib/redis/appendonly.aof
 fi
+sleep 2
+screen -d -m /usr/bin/redis-server
+sleep 2
+kill $(pidof redis-server)
+echo "---Starting Redis Server---"
+sleep 2
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server --appendonly yes
 sleep 5
 
