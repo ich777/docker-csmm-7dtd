@@ -24,7 +24,6 @@ chown -R ${UID}:${GID} /usr/bin/redis-server
 chown -R ${UID}:${GID} /usr/bin/redis-cli
 chmod -R 770 /var/lib/mysql
 chmod -R 770 /var/run/mysqld
-chmod -R 770 /var/lib/redis
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 term_handler() {
