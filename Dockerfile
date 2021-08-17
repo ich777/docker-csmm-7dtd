@@ -31,7 +31,7 @@ RUN mkdir $DATA_DIR && \
 	chown -R $USER $DATA_DIR && \
 	ulimit -n 2048 && \
 	sed -i '$a\[mysqld]\ninnodb-file-per-table=ON\ninnodb-large-prefix=ON\ncharacter-set-server=utf8mb4\ninnodb_default_row_format='DYNAMIC'' /etc/alternatives/my.cnf && \
-	/etc/init.d/mariadb start && \
+	/etc/init.d/mysql start && \
 	mysql -u root -e "CREATE USER IF NOT EXISTS 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';FLUSH PRIVILEGES;" && \
 	mysql -u root -e "CREATE DATABASE IF NOT EXISTS 7dtd;" && \
 	mysql -u root -e "GRANT ALL ON 7dtd.* TO 'csmm'@'%' IDENTIFIED BY 'csmm7dtd';" && \
