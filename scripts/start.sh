@@ -26,6 +26,16 @@ chmod -R 770 /var/lib/mysql
 chmod -R 770 /var/run/mysqld
 chown -R ${UID}:${GID} ${DATA_DIR}
 
+if [ -f ${DATA_DIR}/.database/mysql/debian-10.3.flag ]; then
+  rm -rf ${DATA_DIR}/.database/mysql/ib_logfile*
+  echo "---Upgrading database, please wait!---"
+  mysqld &
+  sleep 10
+  mysql_upgrade
+  mv ${DATA_DIR}/.database/mysql/debian-10.3.flag ${DATA_DIR}/.database/mysql/debian-10.5.flag
+  kill $(pidof mysqld)
+fi
+
 term_handler() {
 	ps -ef | grep node | grep -v "grep" | awk '{print $2}' | xargs kill -SIGTERM;
 	tail --pid="$(pidof node)" -f 2>/dev/null
