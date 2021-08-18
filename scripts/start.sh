@@ -27,6 +27,7 @@ chmod -R 770 /var/run/mysqld
 chown -R ${UID}:${GID} ${DATA_DIR}
 
 if [ -f ${DATA_DIR}/.database/mysql/debian-10.3.flag ]; then
+  chown -R root:root ${DATA_DIR}/.database/mysql/
   rm -rf ${DATA_DIR}/.database/mysql/ib_logfile*
   echo "---Upgrading database, please wait!---"
   mysqld &
@@ -34,6 +35,7 @@ if [ -f ${DATA_DIR}/.database/mysql/debian-10.3.flag ]; then
   mysql_upgrade
   mv ${DATA_DIR}/.database/mysql/debian-10.3.flag ${DATA_DIR}/.database/mysql/debian-10.5.flag
   kill $(pidof mysqld)
+  chown -R ${UID}:${GID} ${DATA_DIR}/.database/mysql/
 fi
 
 term_handler() {
