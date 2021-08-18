@@ -24,19 +24,9 @@ if [ -d ${DATA_DIR}/Database ]; then
 	rm -R ${DATA_DIR}/Database
 fi
 
-if [ -f ${DATA_DIR}/.database/mysql/debian-10.3.flag ]; then
-  rm -rf ${DATA_DIR}/.database/mysql/ib_logfile*
-fi
-
 echo "---Starting MariaDB...---"
 screen -S MariaDB -L -Logfile ${DATA_DIR}/MariaDBLog.0 -d -m mysqld
 sleep 10
-
-if [ -f ${DATA_DIR}/.database/mysql/debian-10.3.flag ]; then
-  echo "---Upgrading database, please wait!---"
-  mysql_upgrade
-  mv ${DATA_DIR}/.database/mysql/debian-10.3.flag ${DATA_DIR}/.database/mysql/debian-10.5.flag
-fi
 
 echo "---Starting Redis Server---"
 screen -S RedisServer -L -Logfile ${DATA_DIR}/RedisLog.0 -d -m /usr/bin/redis-server
