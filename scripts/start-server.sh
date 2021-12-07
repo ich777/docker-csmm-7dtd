@@ -63,7 +63,7 @@ if [ ! -f ${DATA_DIR}/CSMM/app.js ]; then
     find ${DATA_DIR} -name ".config" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".npm" -exec rm -R -f {} \;
     find ${DATA_DIR} -name ".wget-hsts" -exec rm -R -f {} \;
-    cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
+    cp ${DATA_DIR}/CSMM/.env.example.host ${DATA_DIR}/CSMM/.env
     echo "---CSMM successfully installed---"
 elif [ "${FORCE_UPDATE}" == "true" ]; then
 	echo "---Force Update activated, installing CSMM---"
@@ -93,7 +93,7 @@ elif [ "${FORCE_UPDATE}" == "true" ]; then
     if [ -f ${DATA_DIR}/.wget-hsts ]; then
 		rm ${DATA_DIR}/.wget-hsts
     fi
-    cp ${DATA_DIR}/CSMM/.env.example ${DATA_DIR}/CSMM/.env
+    cp ${DATA_DIR}/CSMM/.env.example.host ${DATA_DIR}/CSMM/.env
     echo "---Force Update finished, CSMM successfully installed---"
 else
 	echo "---CSMM found---"
