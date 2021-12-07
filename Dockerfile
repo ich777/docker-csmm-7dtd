@@ -8,7 +8,6 @@ RUN apt-get update && \
 	apt-get -y install --no-install-recommends nodejs && \
 	npm install -g sequelize sequelize-cli cross-env mysql2 && \
 	npm install dotenv && \
-	npm i -g npm@latest && \
 	rm -rf /var/lib/apt/lists/*
 
 ENV DATA_DIR="/csmm-7dtd"
