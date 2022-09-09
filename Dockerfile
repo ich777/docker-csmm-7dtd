@@ -3,6 +3,8 @@ FROM ich777/debian-baseimage
 LABEL org.opencontainers.image.authors="admin@minenet.at"
 LABEL org.opencontainers.image.source="https://github.com/ich777/docker-csmm-7dtd"
 
+WORKDIR /tmp
+
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server git jq && \
 	curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
