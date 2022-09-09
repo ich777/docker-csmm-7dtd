@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.source="https://github.com/ich777/docker-csmm-7dt
 
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server git jq && \
-	curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+	curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
 	apt-get -y install --no-install-recommends nodejs && \
 	npm install -g sequelize sequelize-cli cross-env mysql2 && \
 	npm install dotenv && \
