@@ -2,6 +2,8 @@ FROM ich777/debian-baseimage:latest_armv7
 
 LABEL maintainer="admin@minenet.at"
 
+WORKDIR /tmp
+
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server git jq && \
 	curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
