@@ -8,7 +8,7 @@ WORKDIR /tmp
 RUN apt-get update && \
 	apt-get -y install --no-install-recommends mariadb-server screen unzip curl redis-server git jq && \
 	curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-	apt-get -y install --no-install-recommends nodejs && \
+	apt-get -y install --no-install-recommends nodejs npm && \
 	npm install -g sequelize sequelize-cli cross-env mysql2 && \
 	npm install dotenv && \
 	rm -rf /var/lib/apt/lists/*
